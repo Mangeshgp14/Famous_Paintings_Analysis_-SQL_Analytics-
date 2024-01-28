@@ -81,18 +81,40 @@ WHERE museum_id is null ;
 
 **2. Analyzing the different types of paintings**
 
+**2.1. What are the different styles of paintings available in these museums?**
+
 ````SQL
-SELECT m.name as "museum_that_don't_have_paintings"
-FROM museum m
-LEFT JOIN work w
-on m.museum_id = w.museum_id
-WHERE work_id is null ; 
+SELECT row_number() over(order by count(*) desc) as sr_no, w.style as styles, count(*) as no_of_paintings
+FROM work w
+JOIN museum m
+ON w.museum_id = m.museum_id
+GROUP BY w.style
+ORDER BY no_of_paintings DESC ;
 ````
+
 **Output:**
-| museum_that_don't_have_paintings |
-|----------------------------------|
-|                                  |
 
-**It shows that there are no museums that don't have any paintings.**
+![image](https://github.com/Mangeshgp14/Famous_Paintings_Analysis_-SQL_Analytics-/assets/107695842/511da7c3-e8eb-44ea-a278-e60a7d28289e)
 
+
+**Insights:**
+- There are a total of 23 different styles of paintings that are displayed in these museums.
+- Impressionism and Baroque are the top 2 styles of paintings that are most displayed.
+- There are a significant number of paintings that don't have any style.
+
+
+**2.2. What are the different types of subjects that the paintings in these museums belong to?**
+- Here we need to take care not to include those paintings that are not displayed in any museum.
+
+````SQL
+SELECT row_number() over(order by count(*) desc) as sr_no, s.subject, count(*) as no_of_paintings
+FROM work w
+JOIN subject s
+on w.work_id = s.work_id
+WHERE w.museum_id IS NOT NULL
+GROUP BY s.subject
+````
+**Insights:**
+- There are around 30 different subjects' paintings in all the museums.
+- Portraits subject is the highest in number.
 
