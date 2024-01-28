@@ -1,6 +1,6 @@
 # Famous_Paintings_Analysis_(SQL_Analytics)
 
-**Python code to load the dataset(CSV files) into MySQL database**
+**Python Script to load the dataset(CSV files) into MySQL database**
 
 ````PYTHON
 import pandas as pd
