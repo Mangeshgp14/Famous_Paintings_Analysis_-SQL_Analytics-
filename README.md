@@ -117,6 +117,8 @@ WHERE museum_id is null ;
 |-------------------------------------------------------|
 | 10223                                                 |
 
+\
+\
 **2. Analyzing the different types of paintings**
 
 **2.1. What are the different styles of paintings available in these museums?**
@@ -170,3 +172,30 @@ ORDER BY no_of_paintings DESC;
 
 **Insights:**
 - There are more than 60 different canvas sizes among which 30" long edge and 24" long edge are the widely used ones.
+
+\
+\
+**3. Analyzing the popularity of museums, paintings, and artists.**
+\
+\
+**3.1. Top 3 most popular museums**
+- The popularity of museums is based on the number of paintings they house
+
+````SQL
+with museum_popularity as
+(SELECT m.name as name, m.country, count(work_id) as no_of_paintings, DENSE_RANK() OVER(ORDER BY COUNT(work_id) DESC) as rnk
+FROM museum m
+JOIN work w
+ON m.museum_id = w.museum_id
+GROUP BY m.name)
+
+SELECT name, country, no_of_paintings
+FROM museum_popularity
+WHERE rnk <= 3 ;
+````
+
+**Output:**
+
+![image](https://github.com/Mangeshgp14/Famous_Paintings_Analysis_-SQL_Analytics-/assets/107695842/807ae4f9-4d4f-45bd-b673-052ef57a882f)
+
+
