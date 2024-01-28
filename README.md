@@ -1,5 +1,43 @@
 # Famous_Paintings_Analysis_(SQL_Analytics)
 
+**Python code to load the dataset(CSV files) into MySQL database**
+
+````PYTHON
+import pandas as pd
+from sqlalchemy import create_engine
+import config
+
+# MySQL database configuration
+db_config = {
+    'user': config.username,
+    'password': config.password,
+    'host': config.host,
+    'database': config.database,
+    'raise_on_warnings': True
+}
+
+csv_files = ['artist','canvas_size', 'museum', 'museum_hours', 'product_size', 'subject', 'work' ]
+
+for i in csv_files :
+    
+    # CSV file path
+    csv_file_path = f'{i}.csv'
+
+    # Table name in MySQL
+    table_name = f'{i}'
+
+    # Create a SQLAlchemy engine
+    engine = create_engine(f"mysql+mysqlconnector://{db_config['user']}:{db_config['password']}@{db_config['host']}/{db_config['database']}")
+
+    # Read CSV into a Pandas DataFrame
+    df = pd.read_csv(csv_file_path)
+
+    # Insert DataFrame records into MySQL using SQLAlchemy
+    df.to_sql(name=table_name, con=engine, if_exists='replace', index=False)
+
+    print("Data imported successfully.")
+````
+
 ## Questions and Solutions
 **Our client is a museum chain owner who wants to analyze their business. They want us to analyze the CSV files that store the data about the different museums, the paintings they showcase, the artists of these paintings, etc.** 
 \
@@ -118,3 +156,17 @@ GROUP BY s.subject
 - There are around 30 different subjects' paintings in all the museums.
 - Portraits subject is the highest in number.
 
+**2.3. What are the different canvas sizes in which the paintings are available in the museums?**
+
+````SQL
+SELECT row_number() over(order by count(*) desc) as sr_no, label, width, height, count(w.work_id) as no_of_paintings
+FROM work w
+JOIN product_size p on w.work_id = p.work_id
+JOIN canvas_size c on p.size_id = c.size_id
+WHERE w.museum_id IS NOT NULL
+GROUP BY label, width, height
+ORDER BY no_of_paintings DESC;
+````
+
+**Insights:**
+- There are more than 60 different canvas sizes among which 30" long edge and 24" long edge are the widely used ones.
