@@ -198,4 +198,46 @@ WHERE rnk <= 3 ;
 
 ![image](https://github.com/Mangeshgp14/Famous_Paintings_Analysis_-SQL_Analytics-/assets/107695842/807ae4f9-4d4f-45bd-b673-052ef57a882f)
 
+**3.2. Top 3 most popular painting subjects**
 
+````SQL
+with popular_painting_subjects as 
+(
+SELECT s.subject as subject, COUNT(s.work_id) as no_of_paintings , DENSE_RANK() over( order by count(s.work_id) DESC ) as rnk
+FROM work w 
+join subject s
+ON w.work_id = s.work_id
+WHERE w.museum_id IS NOT NULL
+GROUP BY s.subject 
+ )
+
+SELECT subject, no_of_paintings 
+FROM popular_painting_subjects
+WHERE rnk <=3;
+````
+
+**Output:**
+
+![image](https://github.com/Mangeshgp14/Famous_Paintings_Analysis_-SQL_Analytics-/assets/107695842/461a0853-428b-447a-88bd-5fab5ca0d735)
+
+**3.3 Top 3 popular artists
+
+````SQL
+with popular_painters as 
+(
+SELECT a.full_name as artist_name, COUNT(w.work_id) as no_of_paintings , DENSE_RANK() over( order by count(w.work_id) DESC ) as rnk
+FROM work w 
+join artist a
+ON w.artist_id = a.artist_id
+WHERE w.museum_id IS NOT NULL
+GROUP BY a.full_name 
+ )
+
+SELECT artist_name, no_of_paintings 
+FROM popular_painters
+WHERE rnk <=3;
+````
+
+**Output:**
+
+![image](https://github.com/Mangeshgp14/Famous_Paintings_Analysis_-SQL_Analytics-/assets/107695842/f28e5973-47c3-4c94-9a46-4ea5655bab54)
