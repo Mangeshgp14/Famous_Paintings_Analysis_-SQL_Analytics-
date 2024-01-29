@@ -220,7 +220,7 @@ WHERE rnk <=3;
 
 ![image](https://github.com/Mangeshgp14/Famous_Paintings_Analysis_-SQL_Analytics-/assets/107695842/461a0853-428b-447a-88bd-5fab5ca0d735)
 
-**3.3 Top 3 popular artists
+**3.3 Top 3 popular artists**
 
 ````SQL
 with popular_painters as 
